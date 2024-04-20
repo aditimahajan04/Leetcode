@@ -13,11 +13,11 @@ public:
             return s.substr(left + 1, right - left - 1);
         };
 
-        std::string max_str = s.substr(0, 1);
+        string max_str = s.substr(0, 1);
 
         for (int i = 0; i < s.length() - 1; i++) {
-            std::string odd = expand_from_center(i, i);
-            std::string even = expand_from_center(i, i + 1);
+            string odd = expand_from_center(i, i);
+            string even = expand_from_center(i, i + 1);
 
             if (odd.length() > max_str.length()) {
                 max_str = odd;
