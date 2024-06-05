@@ -2,31 +2,36 @@ class Solution {
 public:
     int leastInterval(vector<char>& tasks, int n) {
         unordered_map<char,int> counts;
-        for(char t:tasks){
-            counts[t]++;
-        }
         priority_queue<int> pq;
-        for(auto c:counts){
-            pq.push(c.second);
+        for(auto it:tasks){
+            counts[it]++;
         }
-        int result=0;
+        for(auto it:counts){
+            pq.push(it.second);
+        }
+        int ans=0;
         while(!pq.empty()){
+            vector<int> temp;
             int time=0;
-            vector<int> tmp;
-            for(int i=0;i<n+1;++i){
+            for(int i=0;i<n+1;i++){
                 if(!pq.empty()){
-                    tmp.push_back(pq.top()-1);
+                    temp.push_back(pq.top()-1);
                     pq.pop();
                     time++;
                 }
             }
-            for(auto t:tmp){
-                if(t){
-                    pq.push(t);
+            for(auto it:temp){
+                if(it){
+                    pq.push(it);
                 }
             }
-            result+=pq.empty()?time:n+1;
+            if(pq.empty()){
+                ans=ans+time;
+            }
+            else{
+                ans=ans+n+1;
+            }
         }
-        return result;
+        return ans;
     }
 };
