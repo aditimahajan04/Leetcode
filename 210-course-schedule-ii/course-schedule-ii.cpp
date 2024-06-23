@@ -1,40 +1,44 @@
 class Solution {
 public:
     vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
-        vector<unordered_set<int>> G(numCourses);
-        vector<int> vis(numCourses,0);
-        vector<int> ans;
+        int N=numCourses;
+        vector<int> adj[N];
+        for(auto  prerequisite:prerequisites){
+            int course= prerequisite[0];
+            int prereq= prerequisite[1];
+            adj[prereq].push_back(course); 
+        }
 
-        for(auto p:prerequisites){
-            int a=p[1],b=p[0];
-            G[a].insert(b);
-        }
-        for(int i=0;i<numCourses;i++){
-            if(vis[i]==0){
-                bool f=dfs(G,vis,ans,i);
-                if(!f){
-                    return{};
-                }
-            }
-        }
-        reverse(ans.begin(),ans.end());
-        return ans;
-    }
-    bool dfs(vector<unordered_set<int>> &G,vector<int>&vis,vector<int> &ans,int cur){
-        vis[cur]=1;
-        for(auto next:G[cur]){
-            if(vis[next]==1){
-                return false;
-            }
-            if(vis[next]==2){
-                continue;
-            }
-            if(!dfs(G,vis,ans,next)){
-                return false;
-            }
-        }
-        vis[cur]=2;
-        ans.push_back(cur);
-        return true;
+        vector<int> indegree(N,0);
+	    for(int i=0;i<N;i++){
+	        for(auto it: adj[i]){
+	            indegree[it]++;
+	        }
+	    }
+	    
+	    queue<int> q;
+	    for(int i=0;i<N;i++){
+	        if(indegree[i]==0){
+	            q.push(i);
+	        }
+	    }
+
+        vector<int> topo;
+	    while(!q.empty()){
+	        int node=q.front();
+	        q.pop();
+	        topo.push_back(node);
+	        
+	        for(auto it: adj[node]){
+	            indegree[it]--;
+	            if(indegree[it]==0){
+	                q.push(it);
+	            }
+	        }
+	    }
+	    if(topo.size()==N){
+	        return topo;
+	    }
+	    return {};
     }
 };
