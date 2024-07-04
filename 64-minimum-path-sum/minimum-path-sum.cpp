@@ -10,14 +10,24 @@ public:
             for (int j = 0; j < n; j++) {
                 if (i == 0 && j == 0) {
                     temp[j] = grid[i][j]; // Starting point
-                } else {
-                    int up = (i > 0) ? prev[j] : INT_MAX;
-                    int left = (j > 0) ? temp[j - 1] : INT_MAX;
-                    temp[j] = grid[i][j] + min(up, left);
+                    continue;
                 }
+
+                int up = INT_MAX;
+                int left = INT_MAX;
+
+                if (i > 0) {
+                    up = prev[j]; // Get value from the previous row
+                }
+
+                if (j > 0) {
+                    left = temp[j - 1]; // Get value from the previous column
+                }
+
+                temp[j] = grid[i][j] + min(up, left); // Correctly calculate the minimum path sum
             }
-            prev = temp;
+            prev = temp; // Update the previous row with the current row
         }
-        return prev[n - 1];
+        return prev[n - 1]; // Return the result from the last cell of the last row
     }
 };
