@@ -1,47 +1,26 @@
-#include <string>
-#include <iostream>
-using namespace std;
-
 class Solution {
-private:
-    // Helper function to check if a character is alphanumeric
-    bool valid(char ch) {
-        return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9');
-    }
-    
-    // Helper function to convert a character to lowercase
-    char toLowerCase(char ch) {
-        if (ch >= 'A' && ch <= 'Z')
-            return ch - 'A' + 'a';
-        return ch; // Already lowercase or a digit
-    }
-
 public:
     bool isPalindrome(string s) {
-        int start = 0;
-        int end = s.length() - 1;
-        
-        while (start < end) {
-            // Move start pointer to the next valid character
-            while (start < end && !valid(s[start])) {
+        int length = s.length();
+        if(length==0){
+            return true;
+        }
+        int start = 0; int end = length - 1;
+        while(start < end){
+            if(!((s[start] >= 'a' && s[start] <= 'z') || (s[start] >= 'A' && s[start] <= 'Z') || (s[start] >= '0' && s[start] <= '9'))){
                 start++;
+                continue;
             }
-            
-            // Move end pointer to the previous valid character
-            while (start < end && !valid(s[end])) {
+            else if(!((s[end] >= 'a' && s[end] <= 'z') || (s[end] >= 'A' && s[end] <= 'Z') || (s[end] >= '0' && s[end] <= '9'))){
                 end--;
+                continue;
             }
-            
-            // Compare the characters after converting them to lowercase
-            if (toLowerCase(s[start]) != toLowerCase(s[end])) {
-                return false; // Not a palindrome
+            if(tolower(s[start]) != tolower(s[end])){
+                return false;
             }
-            
-            // Move pointers closer to the center
             start++;
             end--;
         }
-        
-        return true; // String is a palindrome
+        return true;
     }
 };
