@@ -1,39 +1,47 @@
 #include <string>
 #include <iostream>
-#include <vector>
 using namespace std;
 
 class Solution {
 private:
+    // Helper function to check if a character is alphanumeric
     bool valid(char ch) {
         return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9');
     }
     
+    // Helper function to convert a character to lowercase
     char toLowerCase(char ch) {
-        if ((ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9'))
-            return ch;
-        else
+        if (ch >= 'A' && ch <= 'Z')
             return ch - 'A' + 'a';
+        return ch; // Already lowercase or a digit
     }
-    
-    bool checkPalindrome(string& s, int start, int end) {
-        if (start >= end)
-            return true; // Base case: start index crosses or equals end index, it's a palindrome
-        
-        if (!valid(s[start]))
-            return checkPalindrome(s, start + 1, end); // Skip non-alphanumeric characters from start
-        if (!valid(s[end]))
-            return checkPalindrome(s, start, end - 1); // Skip non-alphanumeric characters from end
-        
-        // If both characters are valid, compare them
-        if (toLowerCase(s[start]) != toLowerCase(s[end]))
-            return false; // Characters don't match
-        
-        // Recur for the substring excluding start and end characters
-        return checkPalindrome(s, start + 1, end - 1);
-    }
+
 public:
     bool isPalindrome(string s) {
-        return checkPalindrome(s, 0, s.length() - 1);
+        int start = 0;
+        int end = s.length() - 1;
+        
+        while (start < end) {
+            // Move start pointer to the next valid character
+            while (start < end && !valid(s[start])) {
+                start++;
+            }
+            
+            // Move end pointer to the previous valid character
+            while (start < end && !valid(s[end])) {
+                end--;
+            }
+            
+            // Compare the characters after converting them to lowercase
+            if (toLowerCase(s[start]) != toLowerCase(s[end])) {
+                return false; // Not a palindrome
+            }
+            
+            // Move pointers closer to the center
+            start++;
+            end--;
+        }
+        
+        return true; // String is a palindrome
     }
 };
