@@ -1,44 +1,31 @@
 class Solution {
-public:
-    vector<vector<string>> partition(string s) {
-        int length = s.size();
-        vector<vector<bool>> isPalindrome(length, vector<bool>(length, false));
-        
-        fillPalindromeTable(s, isPalindrome);
-        
-        vector<vector<string>> allPartitions;
-        generatePartitions(s, 0, isPalindrome, {}, allPartitions);
-        return allPartitions;
+ public:
+  vector<vector<string>> partition(string s) {
+    vector<vector<string>> ans;
+    dfs(s, 0, {}, ans);
+    return ans;
+  }
+
+ private:
+  void dfs(const string& s, int start, vector<string>&& path,
+           vector<vector<string>>& ans) {
+    if (start == s.length()) {
+      ans.push_back(path);
+      return;
     }
 
-private:
-    void fillPalindromeTable(const string& s, vector<vector<bool>>& isPalindrome) {
-        int length = s.size();
-        for (int start = length - 1; start >= 0; --start) {
-            for (int end = start; end < length; ++end) {
-                if (s[start] == s[end]) {
-                    if (end - start < 3) {
-                        isPalindrome[start][end] = true;
-                    } else {
-                        isPalindrome[start][end] = isPalindrome[start + 1][end - 1];
-                    }
-                }
-            }
-        }
-    }
+    for (int i = start; i < s.length(); ++i)
+      if (isPalindrome(s, start, i)) {
+        path.push_back(s.substr(start, i - start + 1));
+        dfs(s, i + 1, std::move(path), ans);
+        path.pop_back();
+      }
+  }
 
-    void generatePartitions(const string& s, int start, const vector<vector<bool>>& isPalindrome, vector<string> currentPartition, vector<vector<string>>& allPartitions) {
-        if (start == s.size()) {
-            allPartitions.push_back(currentPartition);
-            return;
-        }
-
-        for (int end = start; end < s.size(); ++end) {
-            if (isPalindrome[start][end]) {
-                currentPartition.push_back(s.substr(start, end - start + 1));
-                generatePartitions(s, end + 1, isPalindrome, currentPartition, allPartitions);
-                currentPartition.pop_back();  // Backtrack
-            }
-        }
-    }
+  bool isPalindrome(const string& s, int l, int r) {
+    while (l < r)
+      if (s[l++] != s[r--])
+        return false;
+    return true;
+  }
 };
