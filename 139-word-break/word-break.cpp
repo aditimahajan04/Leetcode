@@ -1,49 +1,29 @@
 class Solution {
 public:
-    
-    unordered_map<string, bool> memo;
-    
-    bool wordBreakHelp(string word, unordered_map<string, bool>& dict)
-    {
-        //if present in dict
-        if(dict.find(word) != dict.end())
-            return true;
-        
-        //if present in memo, no need to call 
-        if(memo.find(word) != memo.end())
-            return memo[word];
-        
-        
-        for(int i=0; i<word.length(); i++)
-        {
-            string left = word.substr(0, i+1); //always starts from beginning
-            string right = word.substr(i+1); //remaining string till the last letter;
-            
-            if(dict.find(left) != dict.end())
-            {
-                bool ros = wordBreakHelp(right, dict); //rest of the string is recursed
-                
-                if(ros == true)
-                {
-                    memo[word] = true; //entire word exists
-                    return true;
+    bool wordBreak(string s, vector<string>& wordDict) {
+        int n = s.length();
+        int maxSize = INT_MIN;
+        map<string,int> mapp;
+
+        for(int i=0;i<wordDict.size();i++){
+            mapp[wordDict[i]]++;
+            int curr_size = wordDict[i].size();
+            maxSize = max(maxSize , curr_size);
+        }
+        vector<bool> arr(s.length()+1 , false);
+        arr[0] = true; // cuz empty string is always present and true :
+        for(int i=1;i<=s.length();i++){
+            for(int j=1;j<=maxSize;j++){
+                if(i-j >= 0){
+                    string str = s.substr(i-j , j);
+                    if(mapp.find(str) != mapp.end() && arr[i-j] == true){
+                        arr[i] = true;
+                        break;
+                    }
                 }
             }
+
         }
-        
-        //if no prefix is found to be matching, word does not exist
-        memo[word] = false;
-        return false;
-          
-    }
-    
-    bool wordBreak(string s, vector<string>& wordDict) 
-    {
-        unordered_map<string, bool> dict;
-        
-        for(string s : wordDict)
-            dict[s] = true;
-        
-        return wordBreakHelp(s, dict);
+        return arr[n];
     }
 };
