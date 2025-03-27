@@ -1,26 +1,28 @@
 class Solution {
 public:
     vector<int> asteroidCollision(vector<int>& asteroids) {
-        vector<int> ans;
-        for(int &a:asteroids){
-            while(!ans.empty() && ans.back()>0 && a<0){
-                int sum=a+ans.back();
-                if(sum<0){
-                    ans.pop_back();
-                }
-                else if(sum>0){
-                    a=0;
-                }
-                else{
-                    ans.pop_back();
-                    a=0;
-                }
+        int n = asteroids.size();
+        list<int> st; // Changed from stack to list
+
+        for (int i = 0; i < n; i++) { // Loop should be till n, not n-1
+            if (asteroids[i] > 0) {
+                st.push_back(asteroids[i]);
             }
-            if(a!=0){
-                ans.push_back(a);
-                a=0;
+            else {
+                while (!st.empty() && st.back() > 0 && st.back() < abs(asteroids[i])) {
+                    st.pop_back();
+                }
+                if (!st.empty() && st.back() == abs(asteroids[i])) {
+                    st.pop_back();
+                }
+                else if (st.empty() || st.back() < 0) {
+                    st.push_back(asteroids[i]);
+                }
             }
         }
-        return ans;
+
+        // Convert list to vector
+        vector<int> result(st.begin(), st.end());
+        return result;
     }
 };
