@@ -1,51 +1,70 @@
 class LRUCache {
-public:
-    list<int> dll;
-    map<int,pair<list<int>::iterator,int>>mp;
+  public:
+    class node {
+      public:
+        int key;
+      int val;
+      node * next;
+      node * prev;
+      node(int _key, int _val) {
+        key = _key;
+        val = _val;
+      }
+    };
 
-    int n;
+  node * head = new node(-1, -1);
+  node * tail = new node(-1, -1);
 
-    LRUCache(int capacity) {
-        n=capacity;
+  int cap;
+  unordered_map < int, node * > m;
+
+  LRUCache(int capacity) {
+    cap = capacity;
+    head -> next = tail;
+    tail -> prev = head;
+  }
+
+  void addnode(node * newnode) {
+    node * temp = head -> next;
+    newnode -> next = temp;
+    newnode -> prev = head;
+    head -> next = newnode;
+    temp -> prev = newnode;
+  }
+
+  void deletenode(node * delnode) {
+    node * delprev = delnode -> prev;
+    node * delnext = delnode -> next;
+    delprev -> next = delnext;
+    delnext -> prev = delprev;
+  }
+
+  int get(int key_) {
+    if (m.find(key_) != m.end()) {
+      node * resnode = m[key_];
+      int res = resnode -> val;
+      m.erase(key_);
+      deletenode(resnode);
+      addnode(resnode);
+      m[key_] = head -> next;
+      return res;
     }
 
-    void makeRecentlyUsed(int key){
-        dll.erase(mp[key].first);
-        dll.push_front(key);
-        mp[key].first=dll.begin();
-    }
-    
-    int get(int key) {
-        if(mp.find(key)==mp.end()){
-            return -1;
-        }
-        makeRecentlyUsed(key);
+    return -1;
+  }
 
-        return mp[key].second;
+  void put(int key_, int value) {
+    if (m.find(key_) != m.end()) {
+      node * existingnode = m[key_];
+      m.erase(key_);
+      deletenode(existingnode);
     }
-    
-    void put(int key, int value) {
-        if(mp.find(key)!=mp.end()){
-            mp[key].second=value;
-            makeRecentlyUsed(key);
-        }
-        else{
-            dll.push_front(key);
-            mp[key]={dll.begin(),value};
-            n--;
-        }
-        if(n<0){
-            int key_to_be_deleted=dll.back();
-            mp.erase(key_to_be_deleted);
-            dll.pop_back();
-            n++;
-        }
+    if (m.size() == cap) {
+      m.erase(tail -> prev -> key);
+      deletenode(tail -> prev);
     }
+
+    addnode(new node(key_, value));
+    m[key_] = head -> next;
+  }
 };
-
-/**
- * Your LRUCache object will be instantiated and called as such:
- * LRUCache* obj = new LRUCache(capacity);
- * int param_1 = obj->get(key);
- * obj->put(key,value);
- */
