@@ -1,20 +1,26 @@
+#include <bits/stdc++.h>
+using namespace std;
+
 class Solution {
 public:
     int lengthOfLongestSubstring(string s) {
-        int n=s.length();
-        int maxlen=0;
-        int l=0;
-        int r=0;
-        int hash[255];
-        memset(hash,-1,sizeof(hash));
-        while(r<n){
-            if(hash[s[r]]!=-1 && hash[s[r]]>=l){
-                l=hash[s[r]]+1;
+        int n = s.length();
+        int maxLen = 0;
+        int l = 0, r = 0;
+        vector<int> lastIndex(256, -1); 
+        
+        while (r < n) {
+            if (lastIndex[s[r]] != -1 && lastIndex[s[r]] >= l) {
+                l = lastIndex[s[r]] + 1;
             }
-            hash[s[r]]=r;
-            maxlen=max(maxlen,r-l+1);
+
+            int len = r - l + 1;
+            maxLen = max(maxLen, len);
+
+            lastIndex[s[r]] = r;
             r++;
         }
-        return maxlen;
+
+        return maxLen;
     }
 };
