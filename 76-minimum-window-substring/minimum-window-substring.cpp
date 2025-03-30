@@ -1,44 +1,33 @@
-#include <bits/stdc++.h>
-using namespace std;
-
 class Solution {
 public:
     string minWindow(string s, string t) {
-        // Frequency map to track characters in 't'
-        vector<int> freq(128, 0);
-        for (char c : t) freq[c]++; // Count occurrences of each character in 't'
-        
-        int n = s.size(), m = t.size();
-        int left = 0, right = 0; // Pointers for the sliding window
-        int start = 0;           // Start index of the minimum window
-        int minLen = INT_MAX;    // Length of the minimum window
-        int count = m;           // Number of characters in 't' yet to be matched
+        int hash[256] = {0};
+        int l = 0, r = 0, minLen = INT_MAX, sIndex = -1, cnt = 0;
+        int n = s.size();
+        int m = t.size();
 
-        // Expand the window by moving the 'right' pointer
-        while (right < n) {
-            // If the current character is needed (exists in 't'), decrease the count
-            if (freq[s[right]] > 0) count--;
-
-            // Decrease the frequency of the current character
-            freq[s[right]]--;
-            right++; // Expand the window
-
-            // When the window contains all characters of 't'
-            while (count == 0) {
-                // Update the minimum window if the current one is smaller
-                if (right - left < minLen) {
-                    minLen = right - left; // Update the minimum length
-                    start = left;         // Update the start index
-                }
-
-                // Contract the window by moving the 'left' pointer
-                freq[s[left]]++; // Restore the frequency of the left character
-                if (freq[s[left]] > 0) count++; // If it's needed, increase count
-                left++; // Move the left pointer to shrink the window
-            }
+        // Fix: Use m instead of n for initializing hash table
+        for (int i = 0; i < m; i++) { 
+            hash[t[i]]++;  
         }
 
-        // If no valid window was found, return an empty string
-        return minLen == INT_MAX ? "" : s.substr(start, minLen);
+        while (r < n) { 
+            if (hash[s[r]] > 0) cnt++;  
+            hash[s[r]]--; 
+
+            while (cnt == m) {  
+                if (r - l + 1 < minLen) {  
+                    minLen = r - l + 1;  
+                    sIndex = l;  
+                }
+                
+                hash[s[l]]++;  // Restore character before moving left pointer
+                if (hash[s[l]] > 0) cnt--;  
+                l++;  
+            }
+            r++;  // Move right pointer after processing
+        }
+
+        return sIndex == -1 ? "" : s.substr(sIndex, minLen);
     }
 };
