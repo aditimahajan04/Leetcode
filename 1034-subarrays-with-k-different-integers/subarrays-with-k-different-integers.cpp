@@ -1,29 +1,32 @@
+#include <bits/stdc++.h>
+using namespace std;
+
 class Solution {
 public:
-    int subarraysLessOrEqualToK(vector<int> &nums,int k){
-        if(k==0){
-            return 0;
-        }
-        unordered_map<int,int> mpp;
-        int count=0;
-        int i=0;
-        int j=0;
-        int n=nums.size();
-        while(j<n){
-            mpp[nums[j]]++;
-            while(i<j && mpp.size()>k){
-                mpp[nums[i]]--;
-                if(mpp[nums[i]]==0){
-                    mpp.erase(nums[i]);
+    int func(vector<int>& nums, int k) {
+        if (k == 0) return 0; // Edge case: If k is 0, return 0 (no valid subarray)
+
+        int l = 0, r = 0, cnt = 0;
+        unordered_map<int, int> mpp;
+
+        while (r < nums.size()) {
+            mpp[nums[r]]++;  // Expand window by adding nums[r]
+
+            while (mpp.size() > k) {  // Shrink window if unique elements exceed k
+                mpp[nums[l]]--;
+                if (mpp[nums[l]] == 0) {
+                    mpp.erase(nums[l]);
                 }
-                i++;
+                l++;  // Move left pointer forward
             }
-            count+=j-i+1;
-            j++;
+
+            cnt += (r - l + 1);  // Count subarrays ending at r
+            r++;
         }
-        return count;
+        return cnt;
     }
+
     int subarraysWithKDistinct(vector<int>& nums, int k) {
-        return subarraysLessOrEqualToK(nums,k)-subarraysLessOrEqualToK(nums,k-1);
+        return func(nums, k) - func(nums, k - 1);
     }
 };
