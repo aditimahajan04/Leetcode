@@ -1,20 +1,21 @@
 class Solution {
 public:
     int findContentChildren(vector<int>& g, vector<int>& s) {
-        sort(g.begin(),g.end());
-        sort(s.begin(),s.end());
+        sort(g.begin(), g.end());
+        sort(s.begin(), s.end());
 
-        int count=0;
-        int i=0;
-        int j=0;
-
-        while(i<g.size() && j<s.size()){
-            if(g[i]<= s[j]){
-                count++;
-                i++;
+        int l = 0;
+        int r = 0;
+        
+        // Ensure both pointers stay within bounds
+        while (l < g.size() && r < s.size()) {
+            if (g[l] <= s[r]) { // Assign cookie to child
+                l++;  // Move to next child
+                r++;  // Move to next cookie
+            } else {
+                r++;  // Try next larger cookie
             }
-            j++;
         }
-        return count;
+        return l; // l represents the number of children satisfied
     }
 };
