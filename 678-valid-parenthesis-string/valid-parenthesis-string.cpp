@@ -1,39 +1,25 @@
 class Solution {
 public:
     bool checkValidString(string s) {
-        int o = 0, c = 0, st = 0;
+        int min = 0, max = 0;
         for (int i = 0; i < s.size(); i++) {
             if (s[i] == '(') {
-                o++;
+                min++;
+                max++;
             } else if (s[i] == ')') {
-                c++;
-            } else if (s[i] == '*') {
-                st++;
+                min--;
+                max--;
+            } else { // when s[i] == '*'
+                min--;
+                max++;
             }
-            
-            if (c > o + st) {
+            if (min < 0) { // Ensure min does not go negative
+                min = 0;
+            }
+            if (max < 0) { // If max goes negative, it's invalid
                 return false;
             }
         }
-        
-        o = 0;
-        c = 0;
-        st = 0;
-        
-        for (int i = s.size() - 1; i >= 0; i--) {
-            if (s[i] == '(') {
-                o++;
-            } else if (s[i] == ')') {
-                c++;
-            } else if (s[i] == '*') {
-                st++;
-            }
-            
-            if (o > c + st) {
-                return false;
-            }
-        }
-        
-        return true;
+        return (min == 0);
     }
 };
