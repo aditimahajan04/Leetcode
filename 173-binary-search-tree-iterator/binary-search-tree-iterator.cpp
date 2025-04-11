@@ -29,7 +29,7 @@ public:
     }
 private:
     void pushAll(TreeNode *node){
-        for(; node != NULL; myStack.push(node),node=node->left);
+        for(;node != NULL; myStack.push(node),node=node->left);
     }
 };
 
