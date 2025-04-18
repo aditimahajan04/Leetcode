@@ -1,53 +1,43 @@
-#define ll long long
+#include <vector>
+#include <queue>
+#include <climits>
+using namespace std;
+
 class Solution {
 public:
-int M = 1e9 + 7;
     int countPaths(int n, vector<vector<int>>& roads) {
-        ll src = 0;
-        // create an adjancy list
-        vector<pair<ll , ll>>adj[n];
-        for(auto it : roads){
-            int u = it[0];
-            int v = it[1];
-            int wt = it[2];
-            adj[u].push_back({v ,wt});
-            adj[v].push_back({u ,wt});
+        vector<vector<pair<int, int>>> adj(n);
+        for (auto& it : roads) {
+            adj[it[0]].push_back({it[1], it[2]});
+            adj[it[1]].push_back({it[0], it[2]});
         }
-        // time is very --> so we use the  priority queue..
-        priority_queue<pair<ll ,ll> , vector<pair<ll ,ll>> , greater<pair<ll ,ll>> >pq;
-        // push the things--> {dis ,node}
-        pq.push({0 ,0});
 
+        vector<long long> dist(n, LLONG_MAX); // Use long long for safety
+        vector<int> ways(n, 0);
+        priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<>> pq;
 
-        // make the distance vector 
-        vector<ll>dist(n ,LLONG_MAX);
-        dist[src] = 0;
-        // make the ways vector
-        vector<ll> ways(n ,0);
-        ways[src] = 1;
+        dist[0] = 0;
+        ways[0] = 1;
+        pq.push({0, 0});
 
-        while(!pq.empty()){
-            ll dis = pq.top().first;
-            ll curr_node = pq.top().second;
-            pq.pop();
+        int mod = 1e9 + 7;
 
-            for(auto it : adj[curr_node]){
-               ll neighnode = it.first;
-               ll wt = it.second;
+        while (!pq.empty()) {
+            auto [d, u] = pq.top(); pq.pop();
+            if (d > dist[u]) continue;
 
-               if(dis + wt < dist[neighnode]){
-                dist[neighnode] = dis + wt;
-                pq.push({dist[neighnode] , neighnode});
-                ways[neighnode] = ways[curr_node];
-               } 
-
-               else if(dis + wt == dist[neighnode]){
-                ways[neighnode] = (ways[neighnode] + ways[curr_node]) %M;
-               }
+            for (auto& [v, wt] : adj[u]) {
+                long long newDist = d + wt;
+                if (newDist < dist[v]) {
+                    dist[v] = newDist;
+                    ways[v] = ways[u];
+                    pq.push({newDist, v});
+                } else if (newDist == dist[v]) {
+                    ways[v] = (ways[v] + ways[u]) % mod;
+                }
             }
-            
         }
-        return ways[n-1 ]%M;
 
+        return ways[n - 1];
     }
 };
