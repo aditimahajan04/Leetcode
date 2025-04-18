@@ -1,6 +1,4 @@
-#include <vector>
-#include <queue>
-#include <climits>
+#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
