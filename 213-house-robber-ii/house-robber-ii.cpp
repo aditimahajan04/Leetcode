@@ -1,40 +1,27 @@
 class Solution {
 public:
-    int solve(vector<int>& nums) {
-        int n=nums.size();
-        int a,b,c;
-
-        a = 0;
-        b = nums[0];
-
-        for(int i=1;i<n;i++){
-            int incl = a + nums[i];
-            int excl = b + 0;
-            c = max(incl , excl);
-            a = b;
-            b = c;
+    int robb(vector<int>& nums) {
+        int n = nums.size();
+        int prev = nums[0];
+        int prev2 = 0;
+        for (int i = 1; i < n; i++) {
+            int take = nums[i];
+            if (i > 1) take += prev2;
+            int notTake = prev;
+            int curi = max(take, notTake);
+            prev2 = prev;
+            prev = curi;
         }
-        return b;
+        return prev;
     }
 
     int rob(vector<int>& nums) {
         int n = nums.size();
-        if(n == 1){
-            return nums[0];
-        }
-        
-        vector<int> first,last;
+        if (n == 1) return nums[0];
 
-        for(int i = 0 ; i < n ; i++){
-            if(i != n-1){
-                first.push_back(nums[i]);
-            }
+        vector<int> temp1(nums.begin() + 1, nums.end());     // Exclude first house
+        vector<int> temp2(nums.begin(), nums.end() - 1);     // Exclude last house
 
-            if(i != 0){
-                last.push_back(nums[i]);
-            }
-        }
-
-        return max(solve(first) , solve(last));
-        }
+        return max(robb(temp1), robb(temp2));
+    }
 };
