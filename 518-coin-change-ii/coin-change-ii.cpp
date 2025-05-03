@@ -1,26 +1,16 @@
 class Solution {
 public:
     int change(int amount, vector<int>& coins) {
-        int n = coins.size();
-        using ULL = unsigned long long;  // alias for brevity
-        vector<ULL> prev(amount + 1, 0), cur(amount + 1, 0);
+        vector<unsigned long long> dp(1+amount);
+        dp[0]=1;
 
-        for (int T = 0; T <= amount; T++) {
-            prev[T] = (T % coins[0] == 0);
-        }
-
-        for (int ind = 1; ind < n; ind++) {
-            for (int T = 0; T <= amount; T++) {
-                ULL notTake = prev[T];
-                ULL take = 0;
-                if (coins[ind] <= T) {
-                    take = cur[T - coins[ind]];
-                }
-                cur[T] = take + notTake;
+        for(int c:coins){
+            for(int i=c;i<=amount;i++){
+                dp[i]+=dp[i-c];
             }
-            prev = cur;
         }
 
-        return static_cast<int>(prev[amount]);  // cast back to int safely
+
+        return dp[amount];
     }
 };
