@@ -7,15 +7,14 @@ public:
         int l = 0;
         int r = 0;
         
-        // Ensure both pointers stay within bounds
         while (l < g.size() && r < s.size()) {
-            if (g[l] <= s[r]) { // Assign cookie to child
-                l++;  // Move to next child
-                r++;  // Move to next cookie
+            if (g[l] <= s[r]) { 
+                l++;  
+                r++; 
             } else {
-                r++;  // Try next larger cookie
+                r++; 
             }
         }
-        return l; // l represents the number of children satisfied
+        return l; 
     }
 };
