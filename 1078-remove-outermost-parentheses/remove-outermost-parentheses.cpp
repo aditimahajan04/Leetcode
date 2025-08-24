@@ -1,23 +1,23 @@
 class Solution {
 public:
     string removeOuterParentheses(string s) {
-        int total=0;
+        int t=0;
         string ans="";
 
         for(int i=0;i<s.length();i++){
-            if(s[i]=='('  && total==0){
-                total++;
+            if(s[i]=='(' && t==0){
+                t++;
             }
-            else if(s[i]=='('  && total>0){
+            else if(s[i]=='(' && t>0){
                 ans+='(';
-                total++;
+                t++;
             }
-            else if(s[i]==')' && total>1){
+            else if(s[i]==')' && t>1){
                 ans+=')';
-                total--;
+                t--;
             }
             else{
-                total--;
+                t--;
             }
         }
         return ans;
