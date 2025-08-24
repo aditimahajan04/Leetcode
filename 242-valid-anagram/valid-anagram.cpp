@@ -4,13 +4,14 @@ public:
         if(s.size()!=t.size()){
             return false;
         }
-        vector<int> count(26,0);
+        vector<int> freq(26,0);
+
         for(int i=0;i<s.size();i++){
-            count[s[i]-'a']++;
-            count[t[i]-'a']--;
+            freq[s[i]-'a']++;
+            freq[t[i]-'a']--;
         }
         for(int i=0;i<26;i++){
-            if(count[i]!=0){
+            if(freq[i]!=0){
                 return false;
             }
         }
