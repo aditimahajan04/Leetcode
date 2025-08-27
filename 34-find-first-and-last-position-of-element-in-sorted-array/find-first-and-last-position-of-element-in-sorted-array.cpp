@@ -6,14 +6,14 @@ public:
         int low=0;
         int high=n-1;
 
-        int firstp=-1;
-        int lastp=-1;
+        int fp=-1;
+        int lp=-1;
 
         while(low<=high){
             int mid=(low+high)/2;
 
             if(nums[mid]==target){
-                firstp=mid;
+                fp=mid;
                 high=mid-1;
             }
             else if(nums[mid]<target){
@@ -31,7 +31,7 @@ public:
             int mid=(low+high)/2;
 
             if(nums[mid]==target){
-                lastp=mid;
+                lp=mid;
                 low=mid+1;
             }
             else if(nums[mid]<target){
@@ -42,9 +42,8 @@ public:
             }
         }
 
-        ans.push_back(firstp);
-        ans.push_back(lastp);
-
+        ans.push_back(fp);
+        ans.push_back(lp);
         return ans;
     }
 };
