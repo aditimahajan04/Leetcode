@@ -1,7 +1,7 @@
 class KthLargest {
 public:
     int size;
-    priority_queue<int,vector<int>,greater<int>>pq;
+    priority_queue<int,vector<int>,greater<int>> pq;
     KthLargest(int k, vector<int>& nums) {
         size=k;
         for(auto l:nums){
@@ -10,7 +10,6 @@ public:
     }
     
     int add(int val) {
-        
         pq.push(val);
         while(pq.size()>size){
             pq.pop();
@@ -19,3 +18,8 @@ public:
     }
 };
 
+/**
+ * Your KthLargest object will be instantiated and called as such:
+ * KthLargest* obj = new KthLargest(k, nums);
+ * int param_1 = obj->add(val);
+ */
